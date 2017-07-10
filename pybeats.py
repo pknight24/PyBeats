@@ -2,6 +2,7 @@ import pygame, sys, os
 import time
 from pygame.locals import *
 
+
 cwd = os.getcwd()
 pygame.mixer.pre_init(44100, -16, 1, 512)
 pygame.init()
@@ -29,7 +30,7 @@ pad13 = pygame.Rect(580, 140, 100, 100)
 pad14 = pygame.Rect(720, 140, 100, 100)
 pad15 = pygame.Rect(860, 140, 100, 100)
 pad16 = pygame.Rect(1000, 140, 100, 100)
-
+#loads all of the sounds into the correct pad
 def getsound(folder):
     for f in os.listdir(folder):
         if f.endswith(".wav") or f.endswith(".WAV"):
@@ -68,7 +69,66 @@ pad13sound = pygame.mixer.Sound(os.path.join(cwd, "sounds/pad13sound/"+s13))
 pad14sound = pygame.mixer.Sound(os.path.join(cwd, "sounds/pad14sound/"+s14))
 pad15sound = pygame.mixer.Sound(os.path.join(cwd, "sounds/pad15sound/"+s15))
 pad16sound = pygame.mixer.Sound(os.path.join(cwd, "sounds/pad16sound/"+s16))
+beep = pygame.mixer.Sound(os.path.join(cwd, "sounds/beep.WAV"))
 
+def playsound(key):
+    if key == 'q':
+        pad1sound.play()
+        pygame.draw.rect(DISPLAYSURF, blue, pad1)
+    if key == 'w':
+        pad2sound.play()
+        pygame.draw.rect(DISPLAYSURF, blue, pad2)
+    if key == 'e':
+        pad3sound.play()
+        pygame.draw.rect(DISPLAYSURF, blue, pad3)
+    if key == 'r':
+        pad4sound.play()
+        pygame.draw.rect(DISPLAYSURF, blue, pad4)
+    if key == 'u':
+        stopsound()
+        pad5sound.play()
+        pygame.draw.rect(DISPLAYSURF, blue, pad5)
+    if key == 'i':
+        stopsound()
+        pad6sound.play()
+        pygame.draw.rect(DISPLAYSURF, blue, pad6)
+    if key == 'o':
+        stopsound()
+        pad7sound.play()
+        pygame.draw.rect(DISPLAYSURF, blue, pad7)
+    if key == 'p':
+        stopsound()
+        pad8sound.play()
+        pygame.draw.rect(DISPLAYSURF, blue, pad8)
+    if key == 'a':
+        pad9sound.play()
+        pygame.draw.rect(DISPLAYSURF, blue, pad9)
+    if key == 's':
+        pad10sound.play()
+        pygame.draw.rect(DISPLAYSURF, blue, pad10)
+    if key == 'd':
+        pad11sound.play()
+        pygame.draw.rect(DISPLAYSURF, blue, pad11)
+    if key == 'f':
+        pad12sound.play()
+        pygame.draw.rect(DISPLAYSURF, blue, pad12)
+    if key == 'j':
+        stopsound()
+        pad13sound.play()
+        pygame.draw.rect(DISPLAYSURF, blue, pad13)
+    if key == 'k':
+        stopsound()
+        pad14sound.play()
+        pygame.draw.rect(DISPLAYSURF, blue, pad14)
+    if key == 'l':
+        stopsound()
+        pad15sound.play()
+        pygame.draw.rect(DISPLAYSURF, blue, pad15)
+    if key == ';':
+        stopsound()
+        pad16sound.play()
+        pygame.draw.rect(DISPLAYSURF, blue, pad16)
+                
 
 def stopsound():
     pad5sound.stop()
@@ -80,20 +140,29 @@ def stopsound():
     pad15sound.stop()
     pad16sound.stop()
 
+looping = 0
+recording = False
 
 class Loop:
-    def __init__(self, sequence, timing, loopNum):
-        self.seq = sequence
-        self.t = timing
-        self.x = loopNum
-    def playback(seq, t, x):
+    def __init__(self):
+        self.seq = []
+        self.t = []
+        self.endTime = 0
+    def playback(self, loopNum):
         for n in range(4):
             beep.play()
             time.sleep(1)
+        for n in range(loopNum):
+            for n in range(len(self.seq)):
+                time.sleep(abs(self.t[n]))
+                playsound(self.seq[n])
+            time.sleep(self.endTime)
+        
+
         
 
 DISPLAYSURF.fill(white)
-while(True):
+while(looping == 0):
     pygame.draw.rect(DISPLAYSURF, green, pad1)
     pygame.draw.rect(DISPLAYSURF, green, pad2)
     pygame.draw.rect(DISPLAYSURF, green, pad3)
@@ -110,83 +179,143 @@ while(True):
     pygame.draw.rect(DISPLAYSURF, red, pad14)
     pygame.draw.rect(DISPLAYSURF, red, pad15)
     pygame.draw.rect(DISPLAYSURF, red, pad16)       
+    pygame.draw.circle(DISPLAYSURF, gray, (35, 550), 25, 0)
+    if recording:
+        pygame.draw.circle(DISPLAYSURF, maroon, (35, 550), 10, 0)
    
 
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_q:
-                pad1sound.play()
-                pygame.draw.rect(DISPLAYSURF, blue, pad1)
+                playsound('q')
+                if recording == True:
+                    loo.seq.append('q')
+                    loo.t.append(startTime - time.time())
+                    startTime = time.time()
             if event.key == pygame.K_w:
-                pad2sound.play()
-                pygame.draw.rect(DISPLAYSURF, blue, pad2)
-               
-
+                playsound('w')
+                if recording == True:
+                    loo.seq.append('w')
+                    loo.t.append(startTime - time.time())
+                    startTime = time.time()
             if event.key == pygame.K_e:
-                pad3sound.play()
-                pygame.draw.rect(DISPLAYSURF, blue, pad3)
-                
+                playsound('e')
+                if recording == True:
+                    loo.seq.append('e')
+                    loo.t.append(startTime - time.time())
+                    startTime = time.time()
             if event.key == pygame.K_r:
-                pad4sound.play()
-                pygame.draw.rect(DISPLAYSURF, blue, pad4)
-                
+                playsound('r')
+                if recording == True:
+                    loo.seq.append('r')
+                    loo.t.append(startTime - time.time())
+                    startTime = time.time()
             if event.key == pygame.K_u:
-                stopsound()
-                pad5sound.play()
-                pygame.draw.rect(DISPLAYSURF, blue, pad5)
-               
+                playsound('u')
+                if recording == True:
+                    loo.seq.append('u')
+                    loo.t.append(startTime - time.time())
+                    startTime = time.time() 
             if event.key == pygame.K_i:
-                stopsound()
-                pad6sound.play()
-                pygame.draw.rect(DISPLAYSURF, blue, pad6)
-                
+                playsound('i')
+                if recording == True:
+                    loo.seq.append('i')
+                    loo.t.append(startTime - time.time())
+                    startTime = time.time()
             if event.key == pygame.K_o:
-                stopsound()
-                pad7sound.play()
-                pygame.draw.rect(DISPLAYSURF, blue, pad7)
-               
+                playsound('o')
+                if recording == True:
+                    loo.seq.append('o')
+                    loo.t.append(startTime - time.time())
+                    startTime = time.time()
             if event.key == pygame.K_p:
-                stopsound()
-                pad8sound.play()
-                pygame.draw.rect(DISPLAYSURF, blue, pad8)
-                
+                playsound('p')
+                if recording == True:
+                    loo.seq.append('p')
+                    loo.t.append(startTime - time.time())
+                    startTime = time.time()
             if event.key == pygame.K_a:
-                pad9sound.play()
+                playsound('a')
                 pygame.draw.rect(DISPLAYSURF, blue, pad9)
-                
+                if recording == True:
+                    loo.seq.append('a')
+                    loo.t.append(startTime - time.time())
+                    startTime = time.time()
             if event.key == pygame.K_s:
-                pad10sound.play()
-                pygame.draw.rect(DISPLAYSURF, blue, pad10)
-                
+                playsound('s')
+                if recording == True:
+                    loo.seq.append('s')
+                    loo.t.append(startTime = time.time())
+                    startTime = time.time()
             if event.key == pygame.K_d:
-                pad11sound.play()
-                pygame.draw.rect(DISPLAYSURF, blue, pad11)
-                
+                playsound('d')
+                if recording == True:
+                    loo.seq.append('d')
+                    loo.t.append(startTime = time.time())
             if event.key == pygame.K_f:
-                pad12sound.play()
-                pygame.draw.rect(DISPLAYSURF, blue, pad12)
-                
+                playsound('f')
+                if recording == True:
+                    loo.seq.append('f')
+                    loo.t.append(startTime - time.time())
+                    startTime = time.time()
             if event.key == pygame.K_j:
-                stopsound()
-                pad13sound.play()
-                pygame.draw.rect(DISPLAYSURF, blue, pad13)
-                
+                playsound('j')
+                if recording == True:
+                    loo.seq.append('j')
+                    loo.t.append(startTime - time.time())
+                    startTime = time.time()
             if event.key == pygame.K_k:
-                stopsound()
-                pad14sound.play()
-                pygame.draw.rect(DISPLAYSURF, blue, pad14)
-                
+                playsound('k')
+                if recording == True:
+                    loo.seq.append('k')
+                    loo.t.append(startTime - time.time())
+                    startTime = time.time()
             if event.key == pygame.K_l:
-                stopsound()
-                pad15sound.play()
-                pygame.draw.rect(DISPLAYSURF, blue, pad15)
-                
+                playsound('l')
+                if recording == True:
+                    loo.seq.append('l')
+                    loo.t.append(startTime - time.time())
+                    startTime = time.time()
             if event.key == pygame.K_SEMICOLON:
-                stopsound()
-                pad16sound.play()
-                pygame.draw.rect(DISPLAYSURF, blue, pad16)
-                
+                playsound(';')
+                if recording == True:
+                    loo.seq.append(';')
+                    loo.t.append(startTime - time.time())
+                    startTime = time.time()
+            if event.key == pygame.K_SPACE:
+                if recording == False:
+                    loo = Loop()
+                    recording = True
+                    startTime = time.time()
+                else:
+                    loo.endTime = time.time() - startTime
+                    recording = False
+            if event.key == pygame.K_1:
+                looping = 1
+                loo.playback(2)
+            if event.key == pygame.K_2:
+                looping = 1
+                loo.playback(4)
+            if event.key == pygame.K_3:
+                looping = 1
+                loo.playback(8)
+            if event.key == pygame.K_4:
+                looping = 1
+                loo.playback(16)
+            if event.key == pygame.K_5:
+                looping = 1
+                loo.playback(32)
+            if event.key == pygame.K_6:
+                looping = 1
+                loo.playback(64)
+            if event.key == pygame.K_PERIOD:
+                del loo.seq[:]
+                del loo.t[:]
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
     pygame.display.update()
+
+
+
+
