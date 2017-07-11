@@ -252,7 +252,10 @@ while(looping == 0):
                 if recording == True:
                     loo.seq.append('d')
                     loo.t.append(startTime - time.time())
+<<<<<<< HEAD
                     startTime = time.time()
+=======
+>>>>>>> e0a7b68492e77e1a8c902b635fbd8394fa56ca51
             if event.key == pygame.K_f:
                 playsound('f')
                 if recording == True:
