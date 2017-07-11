@@ -14,3 +14,4 @@ to stop recording. To play your recorded beats, press any number 1 - 9 on the ke
 
 Playback loops 2^x times. For example, if you press 3 on the keyboard, your beat will loop 8 times.
 
+asdf
